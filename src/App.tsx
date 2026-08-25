@@ -37,6 +37,32 @@ export const TodoApp: React.FC = () => {
     return true;
   });
 
+  const filters: {
+    href: string;
+    value: 'all' | 'active' | 'completed';
+    label: string;
+    testId: string;
+  }[] = [
+    {
+      href: '#/',
+      value: 'all',
+      label: 'All',
+      testId: 'FilterLinkAll',
+    },
+    {
+      href: '#/active',
+      value: 'active',
+      label: 'Active',
+      testId: 'FilterLinkActive',
+    },
+    {
+      href: '#/completed',
+      value: 'completed',
+      label: 'Completed',
+      testId: 'FilterLinkCompleted',
+    },
+  ];
+
   useEffect(() => {
     newTodoFieldRef.current?.focus();
   }, [todos.length]);
@@ -193,36 +219,19 @@ export const TodoApp: React.FC = () => {
             </span>
 
             <nav className="filter" data-cy="Filter">
-              <a
-                href="#/"
-                className={`filter__link ${filter === 'all' ? 'selected' : ''}`}
-                data-cy="FilterLinkAll"
-                onClick={() => setFilter('all')}
-              >
-                All
-              </a>
-
-              <a
-                href="#/active"
-                className={`filter__link ${
-                  filter === 'active' ? 'selected' : ''
-                }`}
-                data-cy="FilterLinkActive"
-                onClick={() => setFilter('active')}
-              >
-                Active
-              </a>
-
-              <a
-                href="#/completed"
-                className={`filter__link ${
-                  filter === 'completed' ? 'selected' : ''
-                }`}
-                data-cy="FilterLinkCompleted"
-                onClick={() => setFilter('completed')}
-              >
-                Completed
-              </a>
+              {filters.map(filterItem => (
+                <a
+                  key={filterItem.value}
+                  href={filterItem.href}
+                  className={`filter__link ${
+                    filter === filterItem.value ? 'selected' : ''
+                  }`}
+                  data-cy={filterItem.testId}
+                  onClick={() => setFilter(filterItem.value)}
+                >
+                  {filterItem.label}
+                </a>
+              ))}
             </nav>
 
             <button
