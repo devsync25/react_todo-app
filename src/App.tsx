@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { TodoProvider, useTodos } from './context/TodoContext';
 
@@ -22,6 +22,10 @@ export const TodoApp: React.FC = () => {
 
   const cancelEdit = useRef(false);
   const newTodoFieldRef = useRef<HTMLInputElement>(null);
+
+  const focusNewTodoField = () => {
+    newTodoFieldRef.current?.focus();
+  };
 
   const activeTodosCount = todos.filter(todo => !todo.completed).length;
 
@@ -63,10 +67,6 @@ export const TodoApp: React.FC = () => {
     },
   ];
 
-  useEffect(() => {
-    newTodoFieldRef.current?.focus();
-  }, [todos.length]);
-
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -78,6 +78,7 @@ export const TodoApp: React.FC = () => {
 
     addTodo(title);
     setNewTodoTitle('');
+    focusNewTodoField();
   };
 
   const saveEdit = () => {
@@ -95,6 +96,7 @@ export const TodoApp: React.FC = () => {
 
     setEditingTodoId(null);
     setEditingTitle('');
+    focusNewTodoField();
   };
 
   const handleEditSubmit = (event: React.FormEvent) => {
@@ -119,6 +121,7 @@ export const TodoApp: React.FC = () => {
       cancelEdit.current = true;
       setEditingTodoId(null);
       setEditingTitle('');
+      focusNewTodoField();
     }
   };
 
@@ -135,7 +138,10 @@ export const TodoApp: React.FC = () => {
                 todos.every(todo => todo.completed) ? 'active' : ''
               }`}
               data-cy="ToggleAllButton"
-              onClick={toggleAll}
+              onClick={() => {
+                toggleAll();
+                focusNewTodoField();
+              }}
             />
           )}
 
@@ -166,7 +172,10 @@ export const TodoApp: React.FC = () => {
                   type="checkbox"
                   className="todo__status"
                   checked={todo.completed}
-                  onChange={() => toggleTodo(todo.id)}
+                  onChange={() => {
+                    toggleTodo(todo.id);
+                    focusNewTodoField();
+                  }}
                 />
               </label>
 
@@ -202,7 +211,10 @@ export const TodoApp: React.FC = () => {
                     type="button"
                     className="todo__remove"
                     data-cy="TodoDelete"
-                    onClick={() => deleteTodo(todo.id)}
+                    onClick={() => {
+                      deleteTodo(todo.id);
+                      focusNewTodoField();
+                    }}
                   >
                     ×
                   </button>
@@ -227,7 +239,10 @@ export const TodoApp: React.FC = () => {
                     filter === filterItem.value ? 'selected' : ''
                   }`}
                   data-cy={filterItem.testId}
-                  onClick={() => setFilter(filterItem.value)}
+                  onClick={() => {
+                    setFilter(filterItem.value);
+                    focusNewTodoField();
+                  }}
                 >
                   {filterItem.label}
                 </a>
@@ -238,7 +253,10 @@ export const TodoApp: React.FC = () => {
               type="button"
               className="todoapp__clear-completed"
               data-cy="ClearCompletedButton"
-              onClick={clearCompleted}
+              onClick={() => {
+                clearCompleted();
+                focusNewTodoField();
+              }}
               disabled={!todos.some(todo => todo.completed)}
             >
               Clear completed
