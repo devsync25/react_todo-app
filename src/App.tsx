@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { TodoProvider, useTodos } from './context/TodoContext';
 
@@ -26,6 +26,10 @@ export const TodoApp: React.FC = () => {
   const focusNewTodoField = () => {
     newTodoFieldRef.current?.focus();
   };
+
+  useEffect(() => {
+    newTodoFieldRef.current?.focus();
+  }, [todos.length]);
 
   const activeTodosCount = todos.filter(todo => !todo.completed).length;
 
@@ -78,7 +82,6 @@ export const TodoApp: React.FC = () => {
 
     addTodo(title);
     setNewTodoTitle('');
-    focusNewTodoField();
   };
 
   const saveEdit = () => {
@@ -96,7 +99,6 @@ export const TodoApp: React.FC = () => {
 
     setEditingTodoId(null);
     setEditingTitle('');
-    focusNewTodoField();
   };
 
   const handleEditSubmit = (event: React.FormEvent) => {
@@ -121,7 +123,6 @@ export const TodoApp: React.FC = () => {
       cancelEdit.current = true;
       setEditingTodoId(null);
       setEditingTitle('');
-      focusNewTodoField();
     }
   };
 
